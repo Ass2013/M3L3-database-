@@ -1,2 +1,0 @@
-token = ''
-DATABASE = 'portfolio.db'
