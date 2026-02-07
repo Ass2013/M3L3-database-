@@ -1,5 +1,6 @@
 from multiprocessing.dummy import connection
 import sqlite3
+from tkinter import INSERT
 from config import DATABASE
 
 skills = [ (_,) for _ in (['Python', 'SQL', 'API', 'Telegram'])]
@@ -68,8 +69,13 @@ CREATE TABLE project_skills(
 
 
     def insert_project(self, data):
-        sql = "DELETE FROM projects WHERE user_id = ? AND project_id = ?"
+        sql = """
+        INSERT INTO projects (
+            project_id, user_id, project_name, description, url, status_id
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """
         self.__executemany(sql, data)
+
 
 
     def insert_skill(self, user_id, project_name, skill):
@@ -129,26 +135,23 @@ WHERE project_name=? AND user_id=?
         self.__executemany(sql, [(user_id, project_id)])
     
     def delete_skill(self, project_id, skill_id):
-        sql = """DELETE FROM skills WHERE skill_id = ? AND project_id = ? """
+        sql = """DELETE FROM project_skills WHERE project_id = ? AND skill_id = ? """
         self.__executemany(sql, [(project_id, skill_id)])
+    
 
+    #conn = sqlite3.connect('portfolio.db')
+    #cursor = conn.cursor()
 
-    conn = sqlite3.connect('portfolio.db')
-    cursor = conn.cursor()
+    #table_name = 'projects'
 
-# Название таблицы
-    table_name = 'projects'
-# Название нового столбца и его тип данных
-    new_column_name = 'foto_url'
-    new_column_type = 'TEXT'
+    #new_column_name = 'foto_url'
+    #new_column_type = 'TEXT'
 
-# Выполнение запроса на добавление столбца
-    alter_query = f"ALTER TABLE {table_name} ADD COLUMN {new_column_name} {new_column_type}"
-    cursor.execute(alter_query)
+    #alter_query = f"ALTER TABLE {table_name} ADD COLUMN {new_column_name} {new_column_type}"
+    #cursor.execute(alter_query)
 
-# Сохранение изменений и закрытие соединения
-    conn.commit()
-    conn.close()
+    #conn.commit()
+    #conn.close()
 
             
 if __name__ == '__main__':
